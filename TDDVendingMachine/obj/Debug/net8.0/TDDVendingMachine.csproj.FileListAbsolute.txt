@@ -1,0 +1,14 @@
+D:\Sana_Soft\TDD\TDDVendingMachine\TDDVendingMachine\bin\Debug\net8.0\TDDVendingMachine.exe
+D:\Sana_Soft\TDD\TDDVendingMachine\TDDVendingMachine\bin\Debug\net8.0\TDDVendingMachine.deps.json
+D:\Sana_Soft\TDD\TDDVendingMachine\TDDVendingMachine\bin\Debug\net8.0\TDDVendingMachine.runtimeconfig.json
+D:\Sana_Soft\TDD\TDDVendingMachine\TDDVendingMachine\bin\Debug\net8.0\TDDVendingMachine.dll
+D:\Sana_Soft\TDD\TDDVendingMachine\TDDVendingMachine\bin\Debug\net8.0\TDDVendingMachine.pdb
+D:\Sana_Soft\TDD\TDDVendingMachine\TDDVendingMachine\obj\Debug\net8.0\TDDVendingMachine.GeneratedMSBuildEditorConfig.editorconfig
+D:\Sana_Soft\TDD\TDDVendingMachine\TDDVendingMachine\obj\Debug\net8.0\TDDVendingMachine.AssemblyInfoInputs.cache
+D:\Sana_Soft\TDD\TDDVendingMachine\TDDVendingMachine\obj\Debug\net8.0\TDDVendingMachine.AssemblyInfo.cs
+D:\Sana_Soft\TDD\TDDVendingMachine\TDDVendingMachine\obj\Debug\net8.0\TDDVendingMachine.csproj.CoreCompileInputs.cache
+D:\Sana_Soft\TDD\TDDVendingMachine\TDDVendingMachine\obj\Debug\net8.0\TDDVendingMachine.dll
+D:\Sana_Soft\TDD\TDDVendingMachine\TDDVendingMachine\obj\Debug\net8.0\refint\TDDVendingMachine.dll
+D:\Sana_Soft\TDD\TDDVendingMachine\TDDVendingMachine\obj\Debug\net8.0\TDDVendingMachine.pdb
+D:\Sana_Soft\TDD\TDDVendingMachine\TDDVendingMachine\obj\Debug\net8.0\TDDVendingMachine.genruntimeconfig.cache
+D:\Sana_Soft\TDD\TDDVendingMachine\TDDVendingMachine\obj\Debug\net8.0\ref\TDDVendingMachine.dll
