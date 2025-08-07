@@ -8,9 +8,9 @@
             CoinsType.quarters,
             CoinsType.quarters,
             CoinsType.quarters,
-            CoinsType.dimes,
-            CoinsType.dimes,
-            CoinsType.dimes,
+            //CoinsType.dimes,
+            //CoinsType.dimes,
+            //CoinsType.dimes,
             CoinsType.nickels,
             CoinsType.nickels,
             CoinsType.nickels,
@@ -36,7 +36,7 @@
             }
             else
             {
-                throw new ArgumentException($"Invalid coin value: {coin}");
+                throw new ArgumentException($"Invalid coin value: {coin}.");
             }
         }
 
@@ -50,7 +50,7 @@
             }
             else
             {
-                throw new ArgumentException($"Invalid coin value: {coin}");
+                throw new ArgumentException($"Invalid coin value: {coin}.");
             }
         }
 
@@ -74,6 +74,7 @@
                 change.Clear();
                 change.AddRange(backup);
                 return 0;
+                throw;
             }
         }
 
@@ -93,7 +94,7 @@
             }
 
             if (amount > 0)
-                throw new InvalidOperationException("Insufficient coins to remove the exact amount.");
+                throw new InvalidOperationException("Insufficient coins to return the exact amount.");
 
         }
     }

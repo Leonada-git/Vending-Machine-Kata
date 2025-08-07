@@ -29,7 +29,14 @@
 
         public void RemoveProduct(InventoryItem item)
         {
-            inventory.Remove(item);
+            if (item.Stock == 0)
+            {
+                inventory.Remove(item);
+            }
+            else
+            {
+                return;
+            }
         }
 
         public InventoryItem SearchProduct(string name)

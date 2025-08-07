@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TDDVendingMachine")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e8ee6c2f09c76b8bdcc9eba2d45c2ae4c5c23149")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d3cb494a84699513bde9f10b678c00240faf577a")]
 [assembly: System.Reflection.AssemblyProductAttribute("TDDVendingMachine")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TDDVendingMachine")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

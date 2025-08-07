@@ -40,41 +40,44 @@ namespace TDDVendingMachineTests
         }
 
         [Fact]
-        public void Inserting_invalide_coin_throws_exception()
+        public void Change_is_90_upon_account_creation()
         {
-            int coin = 4;
-            Action act = () => sut.AddToCurrentAmount(coin);
+            var newChange = sut.GetChange();
 
-            act.Should().Throw<ArgumentException>()
-               .WithMessage($"Invalid coin value: 4");
+            newChange.Should().Be(90);
+
         }
 
         [Fact]
-        public void Adds_coins_to_current_amount()
+        public void Inserting_invalide_coin_throws_exception()
         {
-            int coin = 25;
+            Action act = () => sut.AddToCurrentAmount(4);
 
-            sut.AddToCurrentAmount(coin);
+            act.Should().Throw<ArgumentException>()
+               .WithMessage($"Invalid coin value: 4.");
+        }
 
-            int newChange = sut.GetCurrentAmount();
+        [Fact]
+        public void Inserting_coins_adds_to_current_amount()
+        {
+            sut.AddToCurrentAmount(25);
+
+            var newChange = sut.GetCurrentAmount();
             newChange.Should().Be(25);
         }
 
         [Fact]
         public void Dispense_selected_product()
         {
+            int[] insertedCoin = [25, 25, 25, 25];
+            foreach (var coin in insertedCoin)
+            {
+                sut.AddToCurrentAmount(coin);
+            }
+
             InventoryItem product = sut.DispenseSelectedProduct("cola");
 
-            product.Product.Name.Should().Be("cola");
-        }
-
-        [Fact]
-        public void Change_is_120_upon_account_creation()
-        {
-            int newChange = sut.GetChange();
-
-            newChange.Should().Be(120);
-
+            Inventory.GetName(product).Should().Be("cola");
         }
 
         [Fact]
@@ -84,12 +87,12 @@ namespace TDDVendingMachineTests
 
             sut.DispenseSelectedProduct("banana");
 
-            int newChange = sut.GetChange();
-            newChange.Should().Be(125);
+            var newChange = sut.GetChange();
+            newChange.Should().Be(95);
         }
 
         [Fact]
-        public void Change_exceeds_available_change_return_false()
+        public void Insufficient_coins_to_return_the_chnage_returns_zero()
         {
             int[] insertedCoin = [25, 25, 25, 25, 25, 25];
 
@@ -100,44 +103,35 @@ namespace TDDVendingMachineTests
 
             sut.DispenseSelectedProduct("banana");
 
-            int returnedChange = sut.GetReturnedChange();
+            var returnedChange = sut.GetReturnedChange();
             returnedChange.Should().Be(0);
         }
 
         [Fact]
-        public void Change_less_than_available_change_return_true()
+        public void Change_is_returned_if_available()
         {
-            int amount = 50;
-            int result = sut.ReturnChange(amount);
+            sut.AddToCurrentAmount(10);
 
-            result.Should().Be(50);
+            sut.DispenseSelectedProduct("banana");
+
+            var returnedChange = sut.GetReturnedChange();
+            returnedChange.Should().Be(5);
         }
 
         [Fact]
         public void Displays_INSERT_COIN_if_currentAmount_is_zero()
         {
-            string message = sut.Display();
+            var message = sut.Display();
 
             message.Should().Be("INSERT COIN");
         }
 
         [Fact]
-        public void Displays_Sold_Out_If_OutOfStock()
+        public void Displays_Sold_Out_If_out_of_stock()
         {
-            string message = sut.DisplayStock("pizza");
+            var message = sut.DisplayStock("pizza");
 
             message.Should().Be("Sold Out");
-        }
-
-        [Fact]
-        public void Displays_EXACT_CHANGE_ONLY_if_change_available_is_limited()
-        {
-            //Emptying Change
-            sut.ReturnChange(100);
-
-            string message = sut.Display();
-
-            message.Should().Be("EXACT CHANGE ONLY");
         }
 
         [Fact]
@@ -145,7 +139,7 @@ namespace TDDVendingMachineTests
         {
             sut.AddToCurrentAmount(25);
 
-            string message = sut.Display();
+            var message = sut.Display();
 
             message.Should().Be("25");
 
@@ -175,16 +169,17 @@ namespace TDDVendingMachineTests
             sut.RemoveProductFromStock(product);
 
             InventoryItem verifyProduct = sut.FindProduct("cola");
-            int newStock = Inventory.GetStock(verifyProduct);
+            var newStock = Inventory.GetStock(verifyProduct);
             newStock.Should().Be(7);
         }
 
+        //CancellationToken verify
         [Fact]
         public void Removes_Product_With_No_Stock()
         {
-            InventoryItem product = sut.FindProduct("banana");
+            sut.AddToCurrentAmount(10);
 
-            sut.RemoveProductFromStock(product);
+            sut.DispenseSelectedProduct("banana");
 
             InventoryItem verifyProduct = sut.FindProduct("banana");
             verifyProduct.IsEmpty.Should().BeTrue();

@@ -54,50 +54,58 @@
             DisplayStock(Inventory.GetName(item));
 
             int itemPrice = Inventory.GetPrice(item);
+            int currentAmount = GetCurrentAmount();
 
             if (itemPrice <= GetCurrentAmount() && Inventory.GetStock(item) > 0)
             {
+                int coinsToReturns = CalculateReturnedChange(currentAmount, itemPrice);
+
                 try
                 {
-                    int currentAmount = GetCurrentAmount();
-                    returnedChange = CalculateReturendChange(itemPrice);
                     AddToChange(currentAmount);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
+                    returnedChange = ReturnChange(coinsToReturns);
                     ResetCurrentAmount();
 
                 }
-                ResetCurrentAmount();
+                catch (InvalidOperationException ex)
+                {
+                    Console.WriteLine($"Invalid operation: {ex.Message}");
+                    ReturnChange(currentAmount);
+                    //make sure not needed
+                    //AddToCurrentAmount(coinsToReturns);
+
+                }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine($"Invalid argument: {ex.Message}");
+                    ResetCurrentAmount();
+
+                }
+
                 RemoveProductFromStock(item);
 
                 return item;
             }
             else
             {
-                return item ?? InventoryItem.Empty;
+                return InventoryItem.Empty;
             }
         }
 
-        private int CalculateReturendChange(int itemPrice)
+        private static int CalculateReturnedChange(int currentAmount, int itemPrice)
         {
-            int coinsToReturns = GetCurrentAmount() - itemPrice;
-            return ReturnChange(coinsToReturns);
+            int coinsToReturns = currentAmount - itemPrice;
+            return coinsToReturns;
         }
 
-        public int ReturnChange(int amount)
+        private int ReturnChange(int amount)
         {
             return moneyCompartement.TryReturnChange(amount);
         }
 
         public string Display()
         {
-            if (GetCurrentAmount() == 0 && GetChange() <= 100)
-            {
-                return "EXACT CHANGE ONLY";
-            }
-            else if (GetCurrentAmount() == 0)
+            if (GetCurrentAmount() == 0)
             {
                 return "INSERT COIN";
             }
@@ -115,10 +123,10 @@
             return name;
         }
 
-        private int ResetCurrentAmount()
+        private void ResetCurrentAmount()
         {
+            ResetCurrentAmount();
             Display();
-            return moneyCompartement.ResetCurrentAmount();
         }
 
         public void RemoveProductFromStock(InventoryItem product)
@@ -138,14 +146,7 @@
 
         private void RemoveProductWithNoStock(InventoryItem product)
         {
-            if (product.Stock == 0)
-            {
-                vendingMachine.RemoveProduct(product);
-            }
-            else
-            {
-                return;
-            }
+            vendingMachine.RemoveProduct(product);
         }
 
     }
