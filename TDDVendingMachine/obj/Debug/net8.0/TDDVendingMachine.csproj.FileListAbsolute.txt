@@ -7,6 +7,7 @@ D:\Sana_Soft\TDD\TDDVendingMachine\TDDVendingMachine\obj\Debug\net8.0\TDDVending
 D:\Sana_Soft\TDD\TDDVendingMachine\TDDVendingMachine\obj\Debug\net8.0\TDDVendingMachine.AssemblyInfoInputs.cache
 D:\Sana_Soft\TDD\TDDVendingMachine\TDDVendingMachine\obj\Debug\net8.0\TDDVendingMachine.AssemblyInfo.cs
 D:\Sana_Soft\TDD\TDDVendingMachine\TDDVendingMachine\obj\Debug\net8.0\TDDVendingMachine.csproj.CoreCompileInputs.cache
+D:\Sana_Soft\TDD\TDDVendingMachine\TDDVendingMachine\obj\Debug\net8.0\TDDVendingMachine.sourcelink.json
 D:\Sana_Soft\TDD\TDDVendingMachine\TDDVendingMachine\obj\Debug\net8.0\TDDVendingMachine.dll
 D:\Sana_Soft\TDD\TDDVendingMachine\TDDVendingMachine\obj\Debug\net8.0\refint\TDDVendingMachine.dll
 D:\Sana_Soft\TDD\TDDVendingMachine\TDDVendingMachine\obj\Debug\net8.0\TDDVendingMachine.pdb

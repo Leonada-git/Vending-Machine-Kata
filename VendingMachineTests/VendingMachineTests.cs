@@ -7,40 +7,40 @@ namespace TDDVendingMachineTests
 
     public class VendingMachineTests
     {
-        private readonly Product _cola = new("cola", 100);
-        private readonly Product _chips = new("chips", 50);
-        private readonly Product _candy = new("candy", 65);
-        private readonly Product _banana = new("banana", 25);
+        private readonly Product cola = new("cola", 100);
+        private readonly Product chips = new("chips", 50);
+        private readonly Product candy = new("candy", 65);
+        private readonly Product banana = new("banana", 5);
 
-        private readonly InventoryItem _colas;
-        private readonly InventoryItem _bagsOfChips;
-        private readonly InventoryItem _candies;
-        private readonly InventoryItem _bananas;
+        private readonly InventoryItem colas;
+        private readonly InventoryItem bagsOfChips;
+        private readonly InventoryItem candies;
+        private readonly InventoryItem bananas;
 
 
-        private readonly Inventory _inventory;
+        private readonly Inventory inventory;
         private readonly VendingMachine sut;
 
         public VendingMachineTests()
         {
-            _colas = new InventoryItem(8, _cola);
-            _bagsOfChips = new InventoryItem(6, _chips);
-            _candies = new InventoryItem(12, _candy);
-            _candies = new InventoryItem(12, _candy);
-            _bananas = new InventoryItem(1, _banana);
+            colas = new InventoryItem(8, cola);
+            bagsOfChips = new InventoryItem(6, chips);
+            candies = new InventoryItem(12, candy);
+            candies = new InventoryItem(12, candy);
+            bananas = new InventoryItem(1, banana);
 
 
-            _inventory = new Inventory();
-            _inventory.AddProduct(_colas);
-            _inventory.AddProduct(_bagsOfChips);
-            _inventory.AddProduct(_candies);
-            _inventory.AddProduct(_bananas);
+            inventory = new Inventory();
+            inventory.AddProduct(colas);
+            inventory.AddProduct(bagsOfChips);
+            inventory.AddProduct(candies);
+            inventory.AddProduct(bananas);
 
-            sut = new VendingMachine(_inventory);
+            sut = new VendingMachine(inventory);
         }
 
         [Fact]
-        public void Adding_invalide_coin_throws_exception()
+        public void Inserting_invalide_coin_throws_exception()
         {
             int coin = 4;
             Action act = () => sut.AddToCurrentAmount(coin);
@@ -50,7 +50,7 @@ namespace TDDVendingMachineTests
         }
 
         [Fact]
-        public void Adds_to_Current_Amount()
+        public void Adds_coins_to_current_amount()
         {
             int coin = 25;
 
@@ -69,39 +69,39 @@ namespace TDDVendingMachineTests
         }
 
         [Fact]
-        public void Balance_is_120_upon_account_creation()
+        public void Change_is_120_upon_account_creation()
         {
             int newChange = sut.GetChange();
+
             newChange.Should().Be(120);
 
         }
 
         [Fact]
-        public void Add_increases_change_amount()
+        public void Purchase_adds_product_price_to_change_compartment()
         {
-            int coin = 25;
-            sut.AddToChange(coin);
+            sut.AddToCurrentAmount(5);
+
+            sut.DispenseSelectedProduct("banana");
+
             int newChange = sut.GetChange();
-
-            newChange.Should().Be(145);
+            newChange.Should().Be(125);
         }
-
-        [Fact]
-        public void Returns_Total_change_available()
-        {
-            int result = sut.GetChange();
-
-            result.Should().Be(120);
-        }
-
 
         [Fact]
         public void Change_exceeds_available_change_return_false()
         {
-            int amount = 1000;
-            int result = sut.ReturnChange(amount);
+            int[] insertedCoin = [25, 25, 25, 25, 25, 25];
 
-            result.Should().Be(0);
+            foreach (var coin in insertedCoin)
+            {
+                sut.AddToCurrentAmount(coin);
+            }
+
+            sut.DispenseSelectedProduct("banana");
+
+            int returnedChange = sut.GetReturnedChange();
+            returnedChange.Should().Be(0);
         }
 
         [Fact]

@@ -7,6 +7,7 @@ D:\Sana_Soft\TDD\TDDVendingMachine\VendingMachineTests\bin\Debug\net8.0\testhost
 D:\Sana_Soft\TDD\TDDVendingMachine\VendingMachineTests\bin\Debug\net8.0\xunit.runner.visualstudio.dotnetcore.testadapter.dll
 D:\Sana_Soft\TDD\TDDVendingMachine\VendingMachineTests\bin\Debug\net8.0\xunit.runner.reporters.netcoreapp10.dll
 D:\Sana_Soft\TDD\TDDVendingMachine\VendingMachineTests\bin\Debug\net8.0\xunit.runner.utility.netcoreapp10.dll
+D:\Sana_Soft\TDD\TDDVendingMachine\VendingMachineTests\bin\Debug\net8.0\xunit.runner.json
 D:\Sana_Soft\TDD\TDDVendingMachine\VendingMachineTests\bin\Debug\net8.0\TDDVendingMachineTests.deps.json
 D:\Sana_Soft\TDD\TDDVendingMachine\VendingMachineTests\bin\Debug\net8.0\TDDVendingMachineTests.runtimeconfig.json
 D:\Sana_Soft\TDD\TDDVendingMachine\VendingMachineTests\bin\Debug\net8.0\TDDVendingMachineTests.dll
@@ -114,6 +115,7 @@ D:\Sana_Soft\TDD\TDDVendingMachine\VendingMachineTests\obj\Debug\net8.0\TDDVendi
 D:\Sana_Soft\TDD\TDDVendingMachine\VendingMachineTests\obj\Debug\net8.0\TDDVendingMachineTests.AssemblyInfoInputs.cache
 D:\Sana_Soft\TDD\TDDVendingMachine\VendingMachineTests\obj\Debug\net8.0\TDDVendingMachineTests.AssemblyInfo.cs
 D:\Sana_Soft\TDD\TDDVendingMachine\VendingMachineTests\obj\Debug\net8.0\TDDVendingMachineTests.csproj.CoreCompileInputs.cache
+D:\Sana_Soft\TDD\TDDVendingMachine\VendingMachineTests\obj\Debug\net8.0\TDDVendingMachineTests.sourcelink.json
 D:\Sana_Soft\TDD\TDDVendingMachine\VendingMachineTests\obj\Debug\net8.0\TDDVendi.16D7844B.Up2Date
 D:\Sana_Soft\TDD\TDDVendingMachine\VendingMachineTests\obj\Debug\net8.0\TDDVendingMachineTests.dll
 D:\Sana_Soft\TDD\TDDVendingMachine\VendingMachineTests\obj\Debug\net8.0\refint\TDDVendingMachineTests.dll

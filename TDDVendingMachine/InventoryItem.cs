@@ -21,11 +21,6 @@ namespace TDDVendingMachine
             get { return stock; }
         }
 
-        internal void UpdatingStock()
-        {
-            stock--;
-        }
-
         public static string ExtractName(Product product)
         {
             return product.Name;
@@ -35,5 +30,9 @@ namespace TDDVendingMachine
             return product.Price;
         }
 
+        internal void UpdatingStock()
+        {
+            stock--;
+        }
     }
 }

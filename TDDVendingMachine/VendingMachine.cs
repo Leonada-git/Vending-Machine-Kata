@@ -4,6 +4,7 @@
     {
         private readonly Inventory vendingMachine = inventory;
         private readonly MoneyCompartement moneyCompartement = new();
+        private int returnedChange = 0;
 
 
         public IEnumerable<InventoryItem> Products
@@ -30,8 +31,12 @@
         {
             return moneyCompartement.GetCurrentAmount();
         }
+        public int GetReturnedChange()
+        {
+            return returnedChange;
+        }
 
-        public int AddToChange(int coin)
+        private int AddToChange(int coin)
         {
             return moneyCompartement.AddToChange(coin);
         }
@@ -48,13 +53,15 @@
 
             DisplayStock(Inventory.GetName(item));
 
-            int itemPrice = item.Product.Price;
+            int itemPrice = Inventory.GetPrice(item);
 
-            if (itemPrice <= moneyCompartement.GetCurrentAmount() && item.Stock > 0)
+            if (itemPrice <= GetCurrentAmount() && Inventory.GetStock(item) > 0)
             {
                 try
                 {
-                    AddToChange(moneyCompartement.GetCurrentAmount());
+                    int currentAmount = GetCurrentAmount();
+                    returnedChange = CalculateReturendChange(itemPrice);
+                    AddToChange(currentAmount);
                 }
                 catch (Exception ex)
                 {
@@ -62,7 +69,6 @@
                     ResetCurrentAmount();
 
                 }
-                ReturnChange(moneyCompartement.GetCurrentAmount() - itemPrice);
                 ResetCurrentAmount();
                 RemoveProductFromStock(item);
 
@@ -72,6 +78,12 @@
             {
                 return item ?? InventoryItem.Empty;
             }
+        }
+
+        private int CalculateReturendChange(int itemPrice)
+        {
+            int coinsToReturns = GetCurrentAmount() - itemPrice;
+            return ReturnChange(coinsToReturns);
         }
 
         public int ReturnChange(int amount)
