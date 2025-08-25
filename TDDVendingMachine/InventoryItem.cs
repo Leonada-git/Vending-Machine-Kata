@@ -2,12 +2,12 @@
 
 namespace TDDVendingMachine
 {
-    public class InventoryItem(int stock, Product product)
+    public class InventoryItem(Product product, int stock)
     {
         private readonly Product product = product;
         private int stock = stock;
 
-        public static readonly InventoryItem Empty = new(0, new Product(string.Empty, 0));
+        public static readonly InventoryItem Empty = new(new Product(string.Empty, 0), 0);
 
         public bool IsEmpty => this.Equals(InventoryItem.Empty);
 
@@ -30,7 +30,7 @@ namespace TDDVendingMachine
             return product.Price;
         }
 
-        internal void UpdatingStock()
+        internal void DecrementStock()
         {
             stock--;
         }

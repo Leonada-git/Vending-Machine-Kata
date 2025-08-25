@@ -8,45 +8,43 @@
             CoinsType.quarters,
             CoinsType.quarters,
             CoinsType.quarters,
-            //CoinsType.dimes,
-            //CoinsType.dimes,
-            //CoinsType.dimes,
             CoinsType.nickels,
             CoinsType.nickels,
             CoinsType.nickels,
         ];
 
-        public int GetChange()
+        public int Change
         {
-            return change.Select(c => (int)c).Sum();
+            get { return change.Sum(c => (int)c); }
         }
 
-        public int GetCurrentAmount()
+        public int CurrentAmount
         {
-            return currentAmount.Select(c => (int)c).Sum();
+            get { return currentAmount.Sum(c => (int)c); }
         }
 
-        public int AddToChange(int coin)
+        public void AddToChange(int amount)
         {
-            if (Enum.IsDefined(typeof(CoinsType), coin))
+            int[] coinValues = [25, 10, 5];
+
+            foreach (int coinValue in coinValues)
             {
-                CoinsType coinValue = (CoinsType)coin;
-                change.Add(coinValue);
-                return GetChange();
-            }
-            else
-            {
-                throw new ArgumentException($"Invalid coin value: {coin}.");
+                CoinsType coin = (CoinsType)coinValue;
+
+                while (amount >= coinValue && change.Contains(coin))
+                {
+                    change.Add(coin);
+                    amount -= coinValue;
+                }
             }
         }
 
-        public int AddToCurrentAmount(int coin)
+        public void AddToCurrentAmount(int coin)
         {
-            if (Enum.IsDefined(typeof(CoinsType), coin))
+            if (isValideCoin(coin))
             {
                 CoinsType coinValue = (CoinsType)coin;
                 currentAmount.Add(coinValue);
-                return GetCurrentAmount();
             }
             else
             {
@@ -54,11 +52,14 @@
             }
         }
 
-        public int ResetCurrentAmount()
+        private static bool isValideCoin(int coin)
+        {
+            return Enum.IsDefined(typeof(CoinsType), coin);
+        }
+
+        public void ResetCurrentAmount()
         {
             currentAmount.Clear();
-
-            return GetCurrentAmount();
         }
 
         public int TryReturnChange(int amount)

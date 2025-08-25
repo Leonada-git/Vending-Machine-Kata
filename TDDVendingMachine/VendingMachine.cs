@@ -24,12 +24,12 @@
 
         public int GetChange()
         {
-            return moneyCompartement.GetChange();
+            return moneyCompartement.Change;
         }
 
         public int GetCurrentAmount()
         {
-            return moneyCompartement.GetCurrentAmount();
+            return moneyCompartement.CurrentAmount;
         }
         public int GetReturnedChange()
         {
@@ -38,13 +38,15 @@
 
         private int AddToChange(int coin)
         {
-            return moneyCompartement.AddToChange(coin);
+            moneyCompartement.AddToChange(coin);
+            return GetChange();
         }
 
         public int AddToCurrentAmount(int coin)
         {
             Display();
-            return moneyCompartement.AddToCurrentAmount(coin);
+            moneyCompartement.AddToCurrentAmount(coin);
+            return GetCurrentAmount();
         }
 
         public InventoryItem DispenseSelectedProduct(string product)
@@ -56,7 +58,7 @@
             int itemPrice = Inventory.GetPrice(item);
             int currentAmount = GetCurrentAmount();
 
-            if (itemPrice <= GetCurrentAmount() && Inventory.GetStock(item) > 0)
+            if (CanAfford(itemPrice) && IsInStock(item))
             {
                 int coinsToReturns = CalculateReturnedChange(currentAmount, itemPrice);
 
@@ -71,14 +73,6 @@
                 {
                     Console.WriteLine($"Invalid operation: {ex.Message}");
                     ReturnChange(currentAmount);
-                    //make sure not needed
-                    //AddToCurrentAmount(coinsToReturns);
-
-                }
-                catch (ArgumentException ex)
-                {
-                    Console.WriteLine($"Invalid argument: {ex.Message}");
-                    ResetCurrentAmount();
 
                 }
 
@@ -90,6 +84,16 @@
             {
                 return InventoryItem.Empty;
             }
+        }
+
+        private static bool IsInStock(InventoryItem item)
+        {
+            return Inventory.GetStock(item) > 0;
+        }
+
+        private bool CanAfford(int itemPrice)
+        {
+            return itemPrice <= GetCurrentAmount();
         }
 
         private static int CalculateReturnedChange(int currentAmount, int itemPrice)
@@ -105,11 +109,16 @@
 
         public string Display()
         {
-            if (GetCurrentAmount() == 0)
+            if (CurrentAmountIsEmpty())
             {
                 return "INSERT COIN";
             }
             return GetCurrentAmount().ToString();
+        }
+
+        private bool CurrentAmountIsEmpty()
+        {
+            return GetCurrentAmount() == 0;
         }
 
         public string DisplayStock(string name)
@@ -125,7 +134,7 @@
 
         private void ResetCurrentAmount()
         {
-            ResetCurrentAmount();
+            moneyCompartement.ResetCurrentAmount();
             Display();
         }
 
@@ -138,7 +147,7 @@
             }
             else
             {
-                product.UpdatingStock();
+                product.DecrementStock();
                 RemoveProductWithNoStock(product);
             }
 

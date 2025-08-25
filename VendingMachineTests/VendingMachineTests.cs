@@ -7,44 +7,25 @@ namespace TDDVendingMachineTests
 
     public class VendingMachineTests
     {
-        private readonly Product cola = new("cola", 100);
-        private readonly Product chips = new("chips", 50);
-        private readonly Product candy = new("candy", 65);
-        private readonly Product banana = new("banana", 5);
-
-        private readonly InventoryItem colas;
-        private readonly InventoryItem bagsOfChips;
-        private readonly InventoryItem candies;
-        private readonly InventoryItem bananas;
-
-
-        private readonly Inventory inventory;
         private readonly VendingMachine sut;
+        private Inventory inventory = new();
 
         public VendingMachineTests()
         {
-            colas = new InventoryItem(8, cola);
-            bagsOfChips = new InventoryItem(6, chips);
-            candies = new InventoryItem(12, candy);
-            candies = new InventoryItem(12, candy);
-            bananas = new InventoryItem(1, banana);
-
-
-            inventory = new Inventory();
-            inventory.AddProduct(colas);
-            inventory.AddProduct(bagsOfChips);
-            inventory.AddProduct(candies);
-            inventory.AddProduct(bananas);
+            inventory.AddProduct(new InventoryItem(new Product("cola", 100), 8));
+            inventory.AddProduct(new InventoryItem(new Product("chips", 50), 6));
+            inventory.AddProduct(new InventoryItem(new Product("candy", 65), 12));
+            inventory.AddProduct(new InventoryItem(new Product("banana", 5), 1));
 
             sut = new VendingMachine(inventory);
         }
 
         [Fact]
-        public void Change_is_90_upon_account_creation()
+        public void Change_is_90_upon_creation()
         {
-            var newChange = sut.GetChange();
+            var change = sut.GetChange();
 
-            newChange.Should().Be(90);
+            change.Should().Be(90);
 
         }
 
@@ -62,22 +43,29 @@ namespace TDDVendingMachineTests
         {
             sut.AddToCurrentAmount(25);
 
-            var newChange = sut.GetCurrentAmount();
-            newChange.Should().Be(25);
+            var newCurrentAmount = sut.GetCurrentAmount();
+            newCurrentAmount.Should().Be(25);
         }
 
         [Fact]
         public void Dispense_selected_product()
         {
+            InsertFourQuarters();
+
+            var product = sut.DispenseSelectedProduct("cola");
+
+            var productName = Inventory.GetName(product);
+            productName.Should().Be("cola");
+        }
+
+        private void InsertFourQuarters()
+        {
             int[] insertedCoin = [25, 25, 25, 25];
+
             foreach (var coin in insertedCoin)
             {
                 sut.AddToCurrentAmount(coin);
             }
-
-            InventoryItem product = sut.DispenseSelectedProduct("cola");
-
-            Inventory.GetName(product).Should().Be("cola");
         }
 
         [Fact]
@@ -92,14 +80,9 @@ namespace TDDVendingMachineTests
         }
 
         [Fact]
-        public void Insufficient_coins_to_return_the_chnage_returns_zero()
+        public void Insufficient_coins_to_return_the_change_returns_zero()
         {
-            int[] insertedCoin = [25, 25, 25, 25, 25, 25];
-
-            foreach (var coin in insertedCoin)
-            {
-                sut.AddToCurrentAmount(coin);
-            }
+            InsertFourQuarters();
 
             sut.DispenseSelectedProduct("banana");
 
@@ -161,19 +144,23 @@ namespace TDDVendingMachineTests
         }
 
         [Fact]
-        public void Stock_decrement_of_dispensed_product()
+        public void Decrement_stock_of_dispensed_product()
         {
-            InventoryItem product = sut.FindProduct("cola");
+            AddProductJuiceWithTwoInStock();
+            sut.AddToCurrentAmount(25);
 
+            sut.DispenseSelectedProduct("juice");
 
-            sut.RemoveProductFromStock(product);
-
-            InventoryItem verifyProduct = sut.FindProduct("cola");
-            var newStock = Inventory.GetStock(verifyProduct);
-            newStock.Should().Be(7);
+            InventoryItem verifyProduct = sut.FindProduct("juice");
+            var currentStock = Inventory.GetStock(verifyProduct);
+            currentStock.Should().Be(1);
         }
 
-        //CancellationToken verify
+        private void AddProductJuiceWithTwoInStock()
+        {
+            inventory.AddProduct(new InventoryItem(new Product("juice", 15), 2));
+        }
+
         [Fact]
         public void Removes_Product_With_No_Stock()
         {
