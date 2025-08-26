@@ -9,6 +9,7 @@
         {
             get { return name; }
         }
+
         public int Price
         {
             get { return price; }

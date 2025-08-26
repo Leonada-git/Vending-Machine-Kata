@@ -32,9 +32,9 @@ namespace TDDVendingMachineTests
         [Fact]
         public void Inserting_invalide_coin_throws_exception()
         {
-            Action act = () => sut.AddToCurrentAmount(4);
+            Action action = () => sut.AddToCurrentAmount(4);
 
-            act.Should().Throw<ArgumentException>()
+            action.Should().Throw<ArgumentException>()
                .WithMessage($"Invalid coin value: 4.");
         }
 
@@ -43,8 +43,20 @@ namespace TDDVendingMachineTests
         {
             sut.AddToCurrentAmount(25);
 
-            var newCurrentAmount = sut.GetCurrentAmount();
-            newCurrentAmount.Should().Be(25);
+            var CurrentAmount = sut.GetCurrentAmount();
+            CurrentAmount.Should().Be(25);
+        }
+
+        [Fact]
+        public void Purchase_cancelation_returns_current_amount()
+        {
+            InsertFourQuarters();
+
+            sut.CancelPurchase();
+
+            var returnedChange = sut.GetReturnedChange();
+            returnedChange.Should().Be(100);
+
         }
 
         [Fact]
@@ -57,7 +69,6 @@ namespace TDDVendingMachineTests
             var productName = Inventory.GetName(product);
             productName.Should().Be("cola");
         }
-
         private void InsertFourQuarters()
         {
             int[] insertedCoin = [25, 25, 25, 25];
@@ -69,25 +80,25 @@ namespace TDDVendingMachineTests
         }
 
         [Fact]
+        public void Throws_if_coins_are_insufficient_to_return_the_change()
+        {
+            InsertFourQuarters();
+
+            var action = () => sut.DispenseSelectedProduct("banana");
+
+            action.Should().Throw<InvalidOperationException>()
+                           .WithMessage("Insufficient coins to return the exact amount.");
+        }
+
+        [Fact]
         public void Purchase_adds_product_price_to_change_compartment()
         {
             sut.AddToCurrentAmount(5);
 
             sut.DispenseSelectedProduct("banana");
 
-            var newChange = sut.GetChange();
-            newChange.Should().Be(95);
-        }
-
-        [Fact]
-        public void Insufficient_coins_to_return_the_change_returns_zero()
-        {
-            InsertFourQuarters();
-
-            sut.DispenseSelectedProduct("banana");
-
-            var returnedChange = sut.GetReturnedChange();
-            returnedChange.Should().Be(0);
+            var change = sut.GetChange();
+            change.Should().Be(95);
         }
 
         [Fact]
@@ -118,7 +129,7 @@ namespace TDDVendingMachineTests
         }
 
         [Fact]
-        public void Inserting_coins_displays_currentAmount()
+        public void Displays_currentAmount_when_inserting_coins()
         {
             sut.AddToCurrentAmount(25);
 
@@ -171,7 +182,6 @@ namespace TDDVendingMachineTests
             InventoryItem verifyProduct = sut.FindProduct("banana");
             verifyProduct.IsEmpty.Should().BeTrue();
         }
-
 
     }
 }

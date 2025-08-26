@@ -13,10 +13,12 @@
         {
             return InventoryItem.ExtractName(product.Product);
         }
+
         public static int GetPrice(InventoryItem product)
         {
             return InventoryItem.ExtractPrice(product.Product);
         }
+
         public static int GetStock(InventoryItem product)
         {
             return product.Stock;
@@ -29,7 +31,7 @@
 
         public void RemoveProduct(InventoryItem item)
         {
-            if (item.Stock == 0)
+            if (item.Stock <= 0)
             {
                 inventory.Remove(item);
             }

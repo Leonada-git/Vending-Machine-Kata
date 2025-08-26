@@ -36,45 +36,28 @@
             return returnedChange;
         }
 
-        private int AddToChange(int coin)
+        private void AddToChange(int coin)
         {
             moneyCompartement.AddToChange(coin);
-            return GetChange();
         }
 
-        public int AddToCurrentAmount(int coin)
+        public void AddToCurrentAmount(int coin)
         {
             Display();
             moneyCompartement.AddToCurrentAmount(coin);
-            return GetCurrentAmount();
         }
 
         public InventoryItem DispenseSelectedProduct(string product)
         {
-            InventoryItem item = FindProduct(product);
-
-            DisplayStock(Inventory.GetName(item));
-
-            int itemPrice = Inventory.GetPrice(item);
-            int currentAmount = GetCurrentAmount();
+            DisplayStock(product);
+            var item = FindProduct(product);
+            var itemPrice = Inventory.GetPrice(item);
 
             if (CanAfford(itemPrice) && IsInStock(item))
             {
-                int coinsToReturns = CalculateReturnedChange(currentAmount, itemPrice);
+                var coinsToReturns = CalculateReturnedChange(itemPrice);
 
-                try
-                {
-                    AddToChange(currentAmount);
-                    returnedChange = ReturnChange(coinsToReturns);
-                    ResetCurrentAmount();
-
-                }
-                catch (InvalidOperationException ex)
-                {
-                    Console.WriteLine($"Invalid operation: {ex.Message}");
-                    ReturnChange(currentAmount);
-
-                }
+                HandleTansaction(coinsToReturns);
 
                 RemoveProductFromStock(item);
 
@@ -84,6 +67,13 @@
             {
                 return InventoryItem.Empty;
             }
+        }
+
+        private void HandleTansaction(int coinsToReturns)
+        {
+            AddToChange(GetCurrentAmount());
+            returnedChange = ReturnChange(coinsToReturns);
+            ResetCurrentAmount();
         }
 
         private static bool IsInStock(InventoryItem item)
@@ -96,9 +86,10 @@
             return itemPrice <= GetCurrentAmount();
         }
 
-        private static int CalculateReturnedChange(int currentAmount, int itemPrice)
+        private int CalculateReturnedChange(int itemPrice)
         {
-            int coinsToReturns = currentAmount - itemPrice;
+            int coinsToReturns = GetCurrentAmount() - itemPrice;
+
             return coinsToReturns;
         }
 
@@ -107,6 +98,17 @@
             return moneyCompartement.TryReturnChange(amount);
         }
 
+        private void ResetCurrentAmount()
+        {
+            moneyCompartement.ResetCurrentAmount();
+            Display();
+        }
+
+        public void CancelPurchase()
+        {
+            returnedChange = GetCurrentAmount();
+            ResetCurrentAmount();
+        }
         public string Display()
         {
             if (CurrentAmountIsEmpty())
@@ -132,25 +134,10 @@
             return name;
         }
 
-        private void ResetCurrentAmount()
-        {
-            moneyCompartement.ResetCurrentAmount();
-            Display();
-        }
-
         public void RemoveProductFromStock(InventoryItem product)
         {
-
-            if (product.IsEmpty)
-            {
-                return;
-            }
-            else
-            {
-                product.DecrementStock();
-                RemoveProductWithNoStock(product);
-            }
-
+            product.DecrementStock();
+            RemoveProductWithNoStock(product);
         }
 
         private void RemoveProductWithNoStock(InventoryItem product)

@@ -25,23 +25,13 @@
 
         public void AddToChange(int amount)
         {
-            int[] coinValues = [25, 10, 5];
+            amount = BreakIntoCoins(amount, coin => change.Add(coin));
 
-            foreach (int coinValue in coinValues)
-            {
-                CoinsType coin = (CoinsType)coinValue;
-
-                while (amount >= coinValue && change.Contains(coin))
-                {
-                    change.Add(coin);
-                    amount -= coinValue;
-                }
-            }
         }
 
         public void AddToCurrentAmount(int coin)
         {
-            if (isValideCoin(coin))
+            if (IsValideCoin(coin))
             {
                 CoinsType coinValue = (CoinsType)coin;
                 currentAmount.Add(coinValue);
@@ -52,7 +42,7 @@
             }
         }
 
-        private static bool isValideCoin(int coin)
+        private static bool IsValideCoin(int coin)
         {
             return Enum.IsDefined(typeof(CoinsType), coin);
         }
@@ -74,12 +64,20 @@
             {
                 change.Clear();
                 change.AddRange(backup);
-                return 0;
                 throw;
             }
         }
 
         private void ReturnChange(int amount)
+        {
+            amount = BreakIntoCoins(amount, coin => change.Remove(coin));
+
+            if (amount > 0)
+                throw new InvalidOperationException("Insufficient coins to return the exact amount.");
+
+        }
+
+        private int BreakIntoCoins(int amount, Action<CoinsType> coinAction)
         {
             int[] coinValues = [25, 10, 5];
 
@@ -89,14 +87,12 @@
 
                 while (amount >= coinValue && change.Contains(coin))
                 {
-                    change.Remove(coin);
+                    coinAction(coin);
                     amount -= coinValue;
                 }
             }
 
-            if (amount > 0)
-                throw new InvalidOperationException("Insufficient coins to return the exact amount.");
-
+            return amount;
         }
     }
 }
