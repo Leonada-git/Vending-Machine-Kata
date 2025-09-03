@@ -15,6 +15,14 @@ namespace TDDVendingMachine
         {
             get { return product; }
         }
+        public int Price
+        {
+            get { return Product.Price; }
+        }
+        public string Name
+        {
+            get { return Product.Name; }
+        }
 
         public int Stock
         {

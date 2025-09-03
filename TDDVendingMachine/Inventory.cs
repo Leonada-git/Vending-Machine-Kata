@@ -9,21 +9,6 @@
             get { return inventory.AsReadOnly(); }
         }
 
-        public static string GetName(InventoryItem product)
-        {
-            return InventoryItem.ExtractName(product.Product);
-        }
-
-        public static int GetPrice(InventoryItem product)
-        {
-            return InventoryItem.ExtractPrice(product.Product);
-        }
-
-        public static int GetStock(InventoryItem product)
-        {
-            return product.Stock;
-        }
-
         public void AddProduct(InventoryItem item)
         {
             inventory.Add(item);

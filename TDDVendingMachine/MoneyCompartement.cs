@@ -29,6 +29,23 @@
 
         }
 
+        private int BreakIntoCoins(int amount, Action<CoinsType> coinAction)
+        {
+            int[] coinValues = [25, 10, 5];
+
+            foreach (int coinValue in coinValues)
+            {
+                CoinsType coin = (CoinsType)coinValue;
+
+                while (amount >= coinValue && change.Contains(coin))
+                {
+                    coinAction(coin);
+                    amount -= coinValue;
+                }
+            }
+
+            return amount;
+        }
         public void AddToCurrentAmount(int coin)
         {
             if (IsValideCoin(coin))
@@ -75,24 +92,6 @@
             if (amount > 0)
                 throw new InvalidOperationException("Insufficient coins to return the exact amount.");
 
-        }
-
-        private int BreakIntoCoins(int amount, Action<CoinsType> coinAction)
-        {
-            int[] coinValues = [25, 10, 5];
-
-            foreach (int coinValue in coinValues)
-            {
-                CoinsType coin = (CoinsType)coinValue;
-
-                while (amount >= coinValue && change.Contains(coin))
-                {
-                    coinAction(coin);
-                    amount -= coinValue;
-                }
-            }
-
-            return amount;
         }
     }
 }

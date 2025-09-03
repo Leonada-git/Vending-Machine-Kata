@@ -47,11 +47,20 @@
             moneyCompartement.AddToCurrentAmount(coin);
         }
 
+        public string Display()
+        {
+            if (CurrentAmountIsEmpty())
+            {
+                return "INSERT COIN";
+            }
+            return GetCurrentAmount().ToString();
+        }
+
         public InventoryItem DispenseSelectedProduct(string product)
         {
             DisplayStock(product);
             var item = FindProduct(product);
-            var itemPrice = Inventory.GetPrice(item);
+            var itemPrice = item.Price;
 
             if (CanAfford(itemPrice) && IsInStock(item))
             {
@@ -108,14 +117,6 @@
         {
             returnedChange = GetCurrentAmount();
             ResetCurrentAmount();
-        }
-        public string Display()
-        {
-            if (CurrentAmountIsEmpty())
-            {
-                return "INSERT COIN";
-            }
-            return GetCurrentAmount().ToString();
         }
 
         private bool CurrentAmountIsEmpty()

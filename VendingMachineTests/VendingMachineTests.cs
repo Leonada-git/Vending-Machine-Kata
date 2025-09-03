@@ -12,10 +12,10 @@ namespace TDDVendingMachineTests
 
         public VendingMachineTests()
         {
-            inventory.AddProduct(new InventoryItem(new Product("cola", 100), 8));
-            inventory.AddProduct(new InventoryItem(new Product("chips", 50), 6));
-            inventory.AddProduct(new InventoryItem(new Product("candy", 65), 12));
-            inventory.AddProduct(new InventoryItem(new Product("banana", 5), 1));
+            inventory.AddProduct(new InventoryItem(new Product(name: "cola", price: 100), stock: 8));
+            inventory.AddProduct(new InventoryItem(new Product(name: "chips", price: 50), stock: 6));
+            inventory.AddProduct(new InventoryItem(new Product(name: "candy", price: 65), stock: 12));
+            inventory.AddProduct(new InventoryItem(new Product(name: "banana", price: 5), stock: 1));
 
             sut = new VendingMachine(inventory);
         }
@@ -26,6 +26,15 @@ namespace TDDVendingMachineTests
             var change = sut.GetChange();
 
             change.Should().Be(90);
+
+        }
+
+        [Fact]
+        public void Current_amount_is_zero_upon_creation()
+        {
+            var change = sut.GetCurrentAmount();
+
+            change.Should().Be(0);
 
         }
 
@@ -58,6 +67,15 @@ namespace TDDVendingMachineTests
             returnedChange.Should().Be(100);
 
         }
+        private void InsertFourQuarters()
+        {
+            int[] insertedCoin = [25, 25, 25, 25];
+
+            foreach (var coin in insertedCoin)
+            {
+                sut.AddToCurrentAmount(coin);
+            }
+        }
 
         [Fact]
         public void Dispense_selected_product()
@@ -68,15 +86,6 @@ namespace TDDVendingMachineTests
 
             var productName = Inventory.GetName(product);
             productName.Should().Be("cola");
-        }
-        private void InsertFourQuarters()
-        {
-            int[] insertedCoin = [25, 25, 25, 25];
-
-            foreach (var coin in insertedCoin)
-            {
-                sut.AddToCurrentAmount(coin);
-            }
         }
 
         [Fact]
@@ -138,6 +147,7 @@ namespace TDDVendingMachineTests
             message.Should().Be("25");
 
         }
+
         [Fact]
         public void Product_returned_if_found()
         {
@@ -157,29 +167,29 @@ namespace TDDVendingMachineTests
         [Fact]
         public void Decrement_stock_of_dispensed_product()
         {
-            AddProductJuiceWithTwoInStock();
+            AddTowJuiceProductsToStock();
             sut.AddToCurrentAmount(25);
 
             sut.DispenseSelectedProduct("juice");
 
-            InventoryItem verifyProduct = sut.FindProduct("juice");
-            var currentStock = Inventory.GetStock(verifyProduct);
-            currentStock.Should().Be(1);
+            var juiceNewStock = sut.FindProduct("juice").Stock;
+            juiceNewStock.Should().Be(1);
         }
 
-        private void AddProductJuiceWithTwoInStock()
+        private void AddTowJuiceProductsToStock()
         {
-            inventory.AddProduct(new InventoryItem(new Product("juice", 15), 2));
+            inventory.AddProduct(new InventoryItem(new Product(name: "juice", price: 10), stock: 2));
         }
 
         [Fact]
         public void Removes_Product_With_No_Stock()
         {
-            sut.AddToCurrentAmount(10);
+            sut.AddToCurrentAmount(25);
 
-            sut.DispenseSelectedProduct("banana");
+            sut.DispenseSelectedProduct("juice");
+            sut.DispenseSelectedProduct("juice");
 
-            InventoryItem verifyProduct = sut.FindProduct("banana");
+            InventoryItem verifyProduct = sut.FindProduct("juice");
             verifyProduct.IsEmpty.Should().BeTrue();
         }
 
