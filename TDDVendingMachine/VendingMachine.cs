@@ -62,7 +62,11 @@
             var item = FindProduct(product);
             var itemPrice = item.Price;
 
-            if (CanAfford(itemPrice) && IsInStock(item))
+            if (CanNotAfford(itemPrice))
+            {
+                throw new ArgumentException("Insuffisent coins to dispence product");
+            }
+            else if (IsInStock(item))
             {
                 var coinsToReturns = CalculateReturnedChange(itemPrice);
 
@@ -87,12 +91,12 @@
 
         private static bool IsInStock(InventoryItem item)
         {
-            return Inventory.GetStock(item) > 0;
+            return item.Stock > 0;
         }
 
-        private bool CanAfford(int itemPrice)
+        private bool CanNotAfford(int itemPrice)
         {
-            return itemPrice <= GetCurrentAmount();
+            return itemPrice > GetCurrentAmount();
         }
 
         private int CalculateReturnedChange(int itemPrice)

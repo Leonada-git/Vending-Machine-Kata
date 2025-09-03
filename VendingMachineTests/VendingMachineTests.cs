@@ -8,7 +8,7 @@ namespace TDDVendingMachineTests
     public class VendingMachineTests
     {
         private readonly VendingMachine sut;
-        private Inventory inventory = new();
+        private readonly Inventory inventory = new();
 
         public VendingMachineTests()
         {
@@ -84,7 +84,7 @@ namespace TDDVendingMachineTests
 
             var product = sut.DispenseSelectedProduct("cola");
 
-            var productName = Inventory.GetName(product);
+            var productName = product.Name;
             productName.Should().Be("cola");
         }
 
@@ -108,6 +108,17 @@ namespace TDDVendingMachineTests
 
             var change = sut.GetChange();
             change.Should().Be(95);
+        }
+
+        [Fact]
+        public void Purchase_product_sets_current_amount_to_zero()
+        {
+            sut.AddToCurrentAmount(5);
+
+            sut.DispenseSelectedProduct("banana");
+
+            var currentAmount = sut.GetCurrentAmount();
+            currentAmount.Should().Be(0);
         }
 
         [Fact]
@@ -153,7 +164,7 @@ namespace TDDVendingMachineTests
         {
             InventoryItem product = sut.FindProduct("cola");
 
-            Inventory.GetName(product).Should().Be("cola");
+            product.Name.Should().Be("cola");
         }
 
         [Fact]
@@ -184,9 +195,11 @@ namespace TDDVendingMachineTests
         [Fact]
         public void Removes_Product_With_No_Stock()
         {
-            sut.AddToCurrentAmount(25);
-
+            AddTowJuiceProductsToStock();
+            sut.AddToCurrentAmount(10);
             sut.DispenseSelectedProduct("juice");
+
+            sut.AddToCurrentAmount(10);
             sut.DispenseSelectedProduct("juice");
 
             InventoryItem verifyProduct = sut.FindProduct("juice");
