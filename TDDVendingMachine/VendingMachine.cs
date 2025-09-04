@@ -6,17 +6,6 @@
         private readonly MoneyCompartement moneyCompartement = new();
         private int returnedChange = 0;
 
-
-        public IEnumerable<InventoryItem> Products
-        {
-            get { return vendingMachine.InventoryItems; }
-        }
-
-        public MoneyCompartement MoneyCompartement
-        {
-            get { return moneyCompartement; }
-        }
-
         public InventoryItem FindProduct(string name)
         {
             return vendingMachine.SearchProduct(name);
@@ -56,25 +45,30 @@
             return GetCurrentAmount().ToString();
         }
 
-        public InventoryItem DispenseSelectedProduct(string product)
+        public InventoryItem DispenseSelectedProduct(string productName)
         {
-            DisplayStock(product);
-            var item = FindProduct(product);
-            var itemPrice = item.Price;
+            DisplayStock(productName);
+            return FetchProduct(productName);
+        }
 
-            if (CanNotAfford(itemPrice))
+        private InventoryItem FetchProduct(string productName)
+        {
+            var product = FindProduct(productName);
+            var productPrice = product.Price;
+
+            if (CanNotAfford(productPrice))
             {
                 throw new ArgumentException("Insuffisent coins to dispence product");
             }
-            else if (IsInStock(item))
+            else if (IsInStock(product))
             {
-                var coinsToReturns = CalculateReturnedChange(itemPrice);
+                var coinsToReturns = CalculateReturnedChange(productPrice);
 
                 HandleTansaction(coinsToReturns);
 
-                RemoveProductFromStock(item);
+                RemoveProductFromStock(product);
 
-                return item;
+                return product;
             }
             else
             {

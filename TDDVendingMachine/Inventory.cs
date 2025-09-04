@@ -16,7 +16,7 @@
 
         public void RemoveProduct(InventoryItem item)
         {
-            if (item.Stock <= 0)
+            if (IsInStock(item))
             {
                 inventory.Remove(item);
             }
@@ -24,6 +24,11 @@
             {
                 return;
             }
+        }
+
+        private static bool IsInStock(InventoryItem item)
+        {
+            return item.Stock <= 0;
         }
 
         public InventoryItem SearchProduct(string name)
