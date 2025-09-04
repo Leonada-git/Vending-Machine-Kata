@@ -91,7 +91,8 @@ namespace TDDVendingMachineTests
         [Fact]
         public void Throws_if_coins_are_insufficient_to_return_the_change()
         {
-            InsertFourQuarters();
+            //InsertFourQuarters();
+            sut.AddToCurrentAmount(25);
 
             var action = () => sut.DispenseSelectedProduct("banana");
 
@@ -179,7 +180,7 @@ namespace TDDVendingMachineTests
         public void Decrement_stock_of_dispensed_product()
         {
             AddTowJuiceProductsToStock();
-            sut.AddToCurrentAmount(25);
+            sut.AddToCurrentAmount(10);
 
             sut.DispenseSelectedProduct("juice");
 

@@ -3,7 +3,7 @@
     public class VendingMachine(Inventory inventory)
     {
         private readonly Inventory vendingMachine = inventory;
-        private readonly MoneyCompartement moneyCompartement = new();
+        private readonly MoneyCompartment moneyCompartement = new();
         private int returnedChange = 0;
 
         public InventoryItem FindProduct(string name)

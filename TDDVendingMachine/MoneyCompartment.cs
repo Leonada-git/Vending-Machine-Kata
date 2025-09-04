@@ -1,6 +1,6 @@
 ﻿namespace TDDVendingMachine
 {
-    public class MoneyCompartement
+    public class MoneyCompartment
     {
         private readonly List<CoinsType> currentAmount = [];
         private readonly List<CoinsType> change =
@@ -52,16 +52,16 @@
             return amount >= (int)coin && change.Contains(coin);
         }
 
-        public void AddToCurrentAmount(int coinValue)
+        public void AddToCurrentAmount(int coin)
         {
-            if (IsValideCoin(coinValue))
+            if (IsValideCoin(coin))
             {
-                CoinsType coin = (CoinsType)coinValue;
-                currentAmount.Add(coin);
+                CoinsType coinValue = (CoinsType)coin;
+                currentAmount.Add(coinValue);
             }
             else
             {
-                throw new ArgumentException($"Invalid coin value: {coinValue}.");
+                throw new ArgumentException($"Invalid coin value: {coin}.");
             }
         }
 
@@ -93,9 +93,9 @@
 
         private void ReturnChange(int amount)
         {
-            amount = BreakIntoCoins(amount, coin => change.Remove(coin));
+            var remainingAmount = BreakIntoCoins(amount, coin => change.Remove(coin));
 
-            if (amount > 0)
+            if (remainingAmount > 0)
                 throw new InvalidOperationException("Insufficient coins to return the exact amount.");
 
         }
