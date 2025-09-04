@@ -25,11 +25,6 @@
             return returnedChange;
         }
 
-        private void AddToChange(int coin)
-        {
-            moneyCompartement.AddToChange(coin);
-        }
-
         public void AddToCurrentAmount(int coin)
         {
             Display();
@@ -54,19 +49,14 @@
         private InventoryItem FetchProduct(string productName)
         {
             var product = FindProduct(productName);
-            var productPrice = product.Price;
 
-            if (CanNotAfford(productPrice))
+            if (CanNotAfford(product))
             {
                 throw new ArgumentException("Insuffisent coins to dispence product");
             }
             else if (IsInStock(product))
             {
-                var coinsToReturns = CalculateReturnedChange(productPrice);
-
-                HandleTansaction(coinsToReturns);
-
-                RemoveProductFromStock(product);
+                HandelProductSale(product);
 
                 return product;
             }
@@ -76,11 +66,24 @@
             }
         }
 
-        private void HandleTansaction(int coinsToReturns)
+        private void HandelProductSale(InventoryItem product)
+        {
+            var coinsToReturns = CalculateReturnedChange(product);
+
+            HandleMoneyTansaction(coinsToReturns);
+            RemoveProductFromStock(product);
+        }
+
+        private void HandleMoneyTansaction(int coinsToReturns)
         {
             AddToChange(GetCurrentAmount());
             returnedChange = ReturnChange(coinsToReturns);
             ResetCurrentAmount();
+        }
+
+        private void AddToChange(int coin)
+        {
+            moneyCompartement.AddToChange(coin);
         }
 
         private static bool IsInStock(InventoryItem item)
@@ -88,14 +91,14 @@
             return item.Stock > 0;
         }
 
-        private bool CanNotAfford(int itemPrice)
+        private bool CanNotAfford(InventoryItem product)
         {
-            return itemPrice > GetCurrentAmount();
+            return product.Price > GetCurrentAmount();
         }
 
-        private int CalculateReturnedChange(int itemPrice)
+        private int CalculateReturnedChange(InventoryItem product)
         {
-            int coinsToReturns = GetCurrentAmount() - itemPrice;
+            int coinsToReturns = GetCurrentAmount() - product.Price;
 
             return coinsToReturns;
         }

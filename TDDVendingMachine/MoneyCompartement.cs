@@ -25,7 +25,7 @@
 
         public void AddToChange(int amount)
         {
-            amount = BreakIntoCoins(amount, coin => change.Add(coin));
+            BreakIntoCoins(amount, coin => change.Add(coin));
 
         }
 
@@ -37,7 +37,7 @@
             {
                 CoinsType coin = (CoinsType)coinValue;
 
-                while (amount >= coinValue && change.Contains(coin))
+                while (StillCanReturnChange(amount, coin))
                 {
                     coinAction(coin);
                     amount -= coinValue;
@@ -46,16 +46,22 @@
 
             return amount;
         }
-        public void AddToCurrentAmount(int coin)
+
+        private bool StillCanReturnChange(int amount, CoinsType coin)
         {
-            if (IsValideCoin(coin))
+            return amount >= (int)coin && change.Contains(coin);
+        }
+
+        public void AddToCurrentAmount(int coinValue)
+        {
+            if (IsValideCoin(coinValue))
             {
-                CoinsType coinValue = (CoinsType)coin;
-                currentAmount.Add(coinValue);
+                CoinsType coin = (CoinsType)coinValue;
+                currentAmount.Add(coin);
             }
             else
             {
-                throw new ArgumentException($"Invalid coin value: {coin}.");
+                throw new ArgumentException($"Invalid coin value: {coinValue}.");
             }
         }
 
