@@ -101,9 +101,9 @@ namespace TDDVendingMachineTests
         }
 
         [Fact]
-        public void Purchase_adds_product_price_to_change_compartment()
+        public void Purchase_adds_product_price_to_change_compartment_after_returning_change()
         {
-            sut.AddToCurrentAmount(5);
+            sut.AddToCurrentAmount(10);
 
             sut.DispenseSelectedProduct("banana");
 
