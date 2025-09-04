@@ -23,56 +23,57 @@
             get { return currentAmount.Sum(c => (int)c); }
         }
 
+        public void ResetCurrentAmount()
+        {
+            currentAmount.Clear();
+        }
         public void AddToChange(int amount)
         {
-            BreakIntoCoins(amount, coin => change.Add(coin));
-
+            foreach (var coin in BreakAmountIntoCoins(amount))
+            {
+                change.Add(coin);
+            }
         }
 
-        private int BreakIntoCoins(int amount, Action<CoinsType> coinAction)
+        private static IEnumerable<CoinsType> BreakAmountIntoCoins(int amount)
         {
             int[] coinValues = [25, 10, 5];
+            var coins = new List<CoinsType>();
 
-            foreach (int coinValue in coinValues)
+            foreach (var coinValue in coinValues)
             {
-                CoinsType coin = (CoinsType)coinValue;
+                var coin = (CoinsType)coinValue;
 
-                while (StillCanReturnChange(amount, coin))
+                while (CanBreakFurther(amount, coinValue))
                 {
-                    coinAction(coin);
+                    coins.Add(coin);
                     amount -= coinValue;
                 }
             }
 
-            return amount;
+            return coins;
         }
 
-        private bool StillCanReturnChange(int amount, CoinsType coin)
+        private static bool CanBreakFurther(int amount, int coinValue)
         {
-            return amount >= (int)coin && change.Contains(coin);
+            return amount >= coinValue;
         }
 
-        public void AddToCurrentAmount(int coin)
+        public void AddToCurrentAmount(int coinValue)
         {
-            if (IsValideCoin(coin))
+            if (IsValideCoin(coinValue))
             {
-                CoinsType coinValue = (CoinsType)coin;
-                currentAmount.Add(coinValue);
+                currentAmount.Add((CoinsType)coinValue);
             }
             else
             {
-                throw new ArgumentException($"Invalid coin value: {coin}.");
+                throw new ArgumentException($"Invalid coin value: {coinValue}.");
             }
         }
 
-        private static bool IsValideCoin(int coin)
+        private static bool IsValideCoin(int coinValue)
         {
-            return Enum.IsDefined(typeof(CoinsType), coin);
-        }
-
-        public void ResetCurrentAmount()
-        {
-            currentAmount.Clear();
+            return Enum.IsDefined(typeof(CoinsType), coinValue);
         }
 
         public int TryReturnChange(int amount)
@@ -93,11 +94,19 @@
 
         private void ReturnChange(int amount)
         {
-            var remainingAmount = BreakIntoCoins(amount, coin => change.Remove(coin));
+            var coinsToReturn = BreakAmountIntoCoins(amount);
 
-            if (remainingAmount > 0)
-                throw new InvalidOperationException("Insufficient coins to return the exact amount.");
+            foreach (var coin in coinsToReturn)
+            {
+                if (!TryUseCoin(coin))
+                    throw new InvalidOperationException("Insufficient coins to return the exact amount.");
+            }
 
+        }
+
+        private bool TryUseCoin(CoinsType coin)
+        {
+            return change.Remove(coin);
         }
     }
 }
